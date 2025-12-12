@@ -1,89 +1,272 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تنبيه قبل الدخول</title>
+<title>MOMO Auth</title>
 <style>
 *{box-sizing:border-box;}
-body {
-  margin:0;padding:0;font-family:'Segoe UI',sans-serif;
-  background: linear-gradient(135deg, #0f4c4c, #081818);
-  display:flex;justify-content:center;align-items:center;height:100vh;color:#fff;
-}
-.notice-card {
-  width:90%;max-width:500px;
-  background: rgba(255,255,255,0.05);
-  padding:30px;border-radius:25px;
-  backdrop-filter: blur(15px);
-  box-shadow:0 12px 25px rgba(0,0,0,0.5);
-  text-align:center;position:relative;overflow:hidden;
-}
-.notice-card img {
-  width:120px;margin-bottom:20px;
-}
-.notice-card h2 {margin-bottom:15px;font-size:24px;}
-.notice-card p {text-align:right;margin:8px 0;line-height:1.5;font-size:16px;}
-.notice-buttons {display:flex;justify-content: space-between;margin-top:20px;}
-.notice-buttons button {width:48%;padding:12px;font-size:16px;font-weight:bold;border:none;border-radius:15px;cursor:pointer;transition: all 0.3s ease;}
-.notice-buttons .reject {background:#fff;color:#000;}
-.notice-buttons .accept {background:#18c4b8;color:#003;}
-.notice-buttons .reject:hover {background:#e0e0e0;}
-.notice-buttons .accept:hover {background:#12b0a0;}
+body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f4c4c,#081818);display:flex;justify-content:center;align-items:center;height:100vh;color:#fff;overflow:hidden;}
+.auth-card{width:90%;max-width:400px;background:rgba(255,255,255,0.05);padding:30px;border-radius:25px;backdrop-filter:blur(15px);text-align:center;position:relative;box-shadow:0 12px 25px rgba(0,0,0,0.5);}
+.auth-logo{width:120px;margin-bottom:15px;}
+h2{margin-bottom:20px;}
+input, select{width:100%;padding:14px;border-radius:15px;background:rgba(255,255,255,0.15);border:none;color:white;margin-bottom:15px;font-size:16px;}
+select{appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:20px;font-size:12px;height:35px;}
+button{width:100%;padding:15px;background:#18c4b8;border:none;border-radius:25px;color:#003;font-size:18px;font-weight:bold;cursor:pointer;}
+.toggle{margin-top:15px;cursor:pointer;}
+#messageBox{margin-top:10px;color:#00ff99;font-weight:bold;display:none;}
+.option-box{display:flex;justify-content:space-between;margin-bottom:15px;}
+.option-box button{width:48%;padding:10px;background:#1a7070;border:none;border-radius:15px;color:#fff;cursor:pointer;}
+.option-box .active{background:#18c4b8;color:#003;}
+#langSelect{position:fixed;top:20px;left:20px;width:100px;height:30px;background:#18c4b8;color:#003;border:none;border-radius:15px;padding:0 8px;font-weight:bold;cursor:pointer;z-index:1000;}
+#telegramFloating{position:fixed;bottom:20px;right:20px;width:70px;height:70px;border-radius:50%;background:#0088cc;display:flex;justify-content:center;align-items:center;cursor:pointer;box-shadow:0 5px 15px rgba(0,0,0,0.4);z-index:1000;user-select:none;animation:flash 2s infinite;transition:transform 0.3s ease;}
+#telegramFloating img{width:50px;height:50px;border-radius:50%;}
+@keyframes flash{0%,100%{box-shadow:0 0 20px rgba(255,255,255,0.6);}50%{box-shadow:0 0 40px rgba(255,255,255,1);}}
+#customerService{position:fixed;bottom:100px;right:20px;background:#18c4b8;padding:12px 18px;border-radius:20px;color:#003;font-weight:bold;cursor:pointer;display:none;box-shadow:0 5px 15px rgba(0,0,0,0.3);z-index:1000;}
+.popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:0.4s ease-in-out;}
+.popup.show{opacity:1;pointer-events:auto;}
+.popup-box{background:#15d6a1;color:#003;padding:35px 45px;border-radius:22px;text-align:center;min-width:260px;box-shadow:0 10px 30px rgba(0,0,0,0.4);animation:popIn 0.45s ease forwards;transform:scale(0.6);opacity:0;}
+.popup-box .icon{font-size:60px;font-weight:bold;margin-bottom:10px;}
+.popup-box .text{font-size:24px;font-weight:bold;}
+@keyframes popIn{0%{transform:scale(0.5);opacity:0;}60%{transform:scale(1.1);opacity:1;}100%{transform:scale(1);opacity:1;}}
 </style>
 </head>
 <body>
-<div class="notice-card">
-  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGNpcmNsZSByPSI0NSIgeD0iNTAiIHk9IjUwIiBmaWxsPSIjM2RkMmMyIiAvPgogIDx0ZXh0IHg9IjUwIiB5PSI1NCIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzAwMyIgZm9udC13ZWlnaHQ9IjcwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPk1PTTwvdGV4dD4KPC9zdmc+" alt="MOMO Logo">
-  <h2>مرحبًا بالجميع!</h2>
-  <p>قبل أن نبدأ، يرجى قراءة الشروط بعناية. إذا وافقت على الشروط، سيتم الانتقال للصفحة الرئيسية.</p>
-  <p>1- الوصول للمنصة مسؤوليتكم.</p>
-  <p>2- المنصة لإدارة الحسابات المالية بين المستخدمين.</p>
-  <p>3- أي شخص يحاول إنشاء حساب ثاني سيتم حظر حساباته.</p>
-  <p>4- تم إنشاء المنصة في 11/12/2025.</p>
-  <p>5- أموالكم مسؤوليتكم.</p>
 
-  <div class="notice-buttons">
-    <button class="reject" onclick="rejectNotice()">رفض الشروط</button>
-    <button class="accept" onclick="acceptNotice()">أوافق على الشروط</button>
+<select id="langSelect">
+  <option value="en">English ▼</option>
+  <option value="ar">عربي ▼</option>
+</select>
+
+<div id="telegramFloating">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
+</div>
+<div id="customerService">Customer Service</div>
+
+<div class="auth-card">
+  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGNpcmNsZSByPSI0NSIgeD0iNTAiIHk9IjUwIiBmaWxsPSIjM2RkMmMyIiAvPgogIDx0ZXh0IHg9IjUwIiB5PSI1NCIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzAwMyIgZm9udC13ZWlnaHQ9IjcwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPk1PTTwvdGV4dD4KPC9zdmc+" class="auth-logo">
+  <h2 id="authTitle">Login</h2>
+
+  <div class="option-box">
+    <button id="optPhone" class="active">Phone</button>
+    <button id="optEmail">Email</button>
+  </div>
+
+  <div id="phoneBox">
+    <select id="countryCode"></select>
+    <input type="tel" id="phone" placeholder="Phone">
+  </div>
+
+  <input type="email" id="email" placeholder="Email" style="display:none;">
+  <input type="password" id="password" placeholder="Password">
+
+  <button id="authButton">Login</button>
+
+  <div class="toggle" id="toggleBtn">Don't have an account? Create</div>
+  <div id="messageBox"></div>
+</div>
+
+<div id="successPopup" class="popup">
+  <div class="popup-box">
+      <div class="icon">✔</div>
+      <div class="text">Account created successfully</div>
   </div>
 </div>
 
-<script>
-function rejectNotice(){
-  alert("تم رفض الشروط. سيتم إعادة توجيهك.");
-  window.location.href = "index.html";
-}
-function acceptNotice(){
-  alert("شكرًا لموافقتك. جاري الانتقال للصفحة الرئيسية...");
-  setTimeout(()=>{ window.location.href = "home.html"; },1500);
-}
-</script>
-</body>
-</html>  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGNpcmNsZSByPSI0NSIgeD0iNTAiIHk9IjUwIiBmaWxsPSIjM2RkMmMyIiAvPgogIDx0ZXh0IHg9IjUwIiB5PSI1NCIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzAwMyIgZm9udC13ZWlnaHQ9IjcwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPk1PTTwvdGV4dD4KPC9zdmc+" alt="MOMO Logo">
-  <h2>مرحبًا بالجميع!</h2>
-  <p>قبل أن نبدأ، يرجى قراءة الشروط بعناية. إذا وافقت على الشروط، سيتم الانتقال للصفحة الرئيسية.</p>
-  <p>1- الوصول للمنصة مسؤوليتكم.</p>
-  <p>2- المنصة لإدارة الحسابات المالية بين المستخدمين.</p>
-  <p>3- أي شخص يحاول إنشاء حساب ثاني سيتم حظر حساباته.</p>
-  <p>4- تم إنشاء المنصة في 11/12/2025.</p>
-  <p>5- أموالكم مسؤوليتكم.</p>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
-  <div class="notice-buttons">
-    <button class="reject" onclick="rejectNotice()">رفض الشروط</button>
-    <button class="accept" onclick="acceptNotice()">أوافق على الشروط</button>
-  </div>
-</div>
+const firebaseConfig = {apiKey:"AIzaSyDnyzuDJZ_QJmm4hDqrfseozpASFyjpCZk",authDomain:"mom12-b6084.firebaseapp.com",projectId:"mom12-b6084",storageBucket:"mom12-b6084.firebasestorage.app",messagingSenderId:"61747516028",appId:"1:61747516028:web:246d742240521fc8daeff9"};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-<script>
-function rejectNotice(){
-  alert("تم رفض الشروط. سيتم إعادة توجيهك.");
-  window.location.href = "index.html";
+let isLogin = true;
+let mode = "phone";
+let currentLang = "en";
+
+// ELEMENTS
+const emailInput = document.getElementById("email");
+const phoneInput = document.getElementById("phone");
+const phoneBox = document.getElementById("phoneBox");
+const countryCode = document.getElementById("countryCode");
+const passwordInput = document.getElementById("password");
+const authTitle = document.getElementById("authTitle");
+const authButton = document.getElementById("authButton");
+const toggleBtn = document.getElementById("toggleBtn");
+const messageBox = document.getElementById("messageBox");
+const popup = document.getElementById("successPopup");
+const telegramFloating = document.getElementById("telegramFloating");
+const customerService = document.getElementById("customerService");
+const langSelect = document.getElementById("langSelect");
+
+// COUNTRY DATA
+const countries = [
+  {ar:"أمريكا",en:"USA",code:"+1"},
+  {ar:"إسبانيا",en:"Spain",code:"+34"},
+  {ar:"البرتغال",en:"Portugal",code:"+351"},
+  {ar:"اليمن",en:"Yemen",code:"+967"},
+  {ar:"الجزائر",en:"Algeria",code:"+213"},
+  {ar:"تونس",en:"Tunisia",code:"+216"}
+];
+
+function populateCountries(){
+  countryCode.innerHTML = "";
+  countries.forEach(c=>{
+    const option = document.createElement("option");
+    option.value = c.code;
+    option.text = currentLang==="ar" ? `${c.ar} ${c.code}` : `${c.en} ${c.code}`;
+    countryCode.appendChild(option);
+  });
 }
-function acceptNotice(){
-  alert("شكرًا لموافقتك. جاري الانتقال للصفحة الرئيسية...");
-  setTimeout(()=>{ window.location.href = "home.html"; },1500);
+populateCountries();
+
+// LANGUAGE SWITCH
+langSelect.onchange = () => {
+  currentLang = langSelect.value;
+  document.documentElement.lang = currentLang === "ar" ? "ar" : "en";
+  document.body.dir = currentLang === "ar" ? "rtl" : "ltr";
+
+  if(currentLang === "ar"){
+    authTitle.innerText = isLogin ? "تسجيل الدخول" : "إنشاء حساب";
+    toggleBtn.innerText = isLogin ? "ليس لديك حساب؟ أنشئ حساب" : "لديك حساب؟ سجل دخول";
+    phoneInput.placeholder = "رقم الهاتف";
+    emailInput.placeholder = "البريد الإلكتروني";
+    passwordInput.placeholder = "كلمة المرور";
+    authButton.innerText = isLogin ? "تسجيل الدخول" : "إنشاء حساب";
+    customerService.innerText = "خدمة العملاء";
+    document.getElementById("optPhone").innerText = "رقم الهاتف";
+    document.getElementById("optEmail").innerText = "البريد الإلكتروني";
+    popup.querySelector(".text").innerText = "تم إنشاء الحساب بنجاح";
+    messageBox.style.textAlign = "right";
+  } else {
+    authTitle.innerText = isLogin ? "Login" : "Create Account";
+    toggleBtn.innerText = isLogin ? "Don't have an account? Create" : "Already have an account? Login";
+    phoneInput.placeholder = "Phone";
+    emailInput.placeholder = "Email";
+    passwordInput.placeholder = "Password";
+    authButton.innerText = isLogin ? "Login" : "Create Account";
+    customerService.innerText = "Customer Service";
+    document.getElementById("optPhone").innerText = "Phone";
+    document.getElementById("optEmail").innerText = "Email";
+    popup.querySelector(".text").innerText = "Account created successfully";
+    messageBox.style.textAlign = "left";
+  }
+
+  populateCountries();
+};
+
+// SWITCH PHONE / EMAIL
+document.getElementById("optPhone").onclick = ()=>{
+  mode="phone";
+  phoneBox.style.display="block";
+  emailInput.style.display="none";
+  document.getElementById("optPhone").classList.add("active");
+  document.getElementById("optEmail").classList.remove("active");
+};
+
+document.getElementById("optEmail").onclick = ()=>{
+  mode="email";
+  phoneBox.style.display="none";
+  emailInput.style.display="block";
+  document.getElementById("optEmail").classList.add("active");
+  document.getElementById("optPhone").classList.remove("active");
+};
+
+// TOGGLE LOGIN / REGISTER
+toggleBtn.onclick = ()=>{
+  isLogin = !isLogin;
+  langSelect.onchange();
+  emailInput.value="";
+  phoneInput.value="";
+  passwordInput.value="";
+  messageBox.style.display="none";
+};
+
+// FIREBASE HELPERS
+function generateID(){return "INV_"+Date.now();}
+async function findUser(value){
+  const q = query(collection(db,"users"), where(mode,"==",value));
+  const snap = await getDocs(q);
+  return snap.empty?null:{id:snap.docs[0].id,...snap.docs[0].data()};
 }
+async function createNewUser(email,phone,password){
+  const id = "user_"+Date.now();
+  await setDoc(doc(db,"users",id),{email,phone,password,inviteCode:generateID(),friendsCount:0});
+}
+
+// AUTH BUTTON
+authButton.onclick=async()=>{
+  const value=mode==="email"?emailInput.value.trim():countryCode.value+phoneInput.value.trim();
+  const pass=passwordInput.value.trim();
+
+  if(value===""||pass.length<6){
+    alert(currentLang==="ar"?"❌ يرجى ملء جميع الحقول بشكل صحيح. كلمة المرور يجب أن تكون 6 أحرف على الأقل.":"❌ Please fill all fields correctly. Password must be at least 6 characters.");
+    return;
+  }
+
+  messageBox.style.display="none";
+
+  if(isLogin){
+    const user=await findUser(value);
+    if(!user){
+      messageBox.style.color="#ff4444";
+      messageBox.innerText=currentLang==="ar"?"❌ الحساب غير موجود":"❌ Account not found";
+      messageBox.style.display="block";
+      return;
+    }
+    if(user.password!==pass){
+      messageBox.style.color="#ff4444";
+      messageBox.innerText=currentLang==="ar"?"❌ كلمة المرور خاطئة":"❌ Wrong password";
+      messageBox.style.display="block";
+      return;
+    }
+
+    localStorage.setItem("loggedUser",JSON.stringify(user));
+    messageBox.style.color="#00ff99";
+    messageBox.innerText=currentLang==="ar"?"✔ تسجيل دخول ناجح...":"✔ Login successful";
+    messageBox.style.display="block";
+
+    // الانتقال إلى notice.html
+    setTimeout(()=>{ window.location.href = "notice.html"; }, 1000);
+
+  } else {
+    const exists=await findUser(value);
+    if(exists){
+      messageBox.style.color="#ff4444";
+      messageBox.innerText=currentLang==="ar"?"❌ الحساب موجود مسبقًا":"❌ Account already exists";
+      messageBox.style.display="block";
+      return;
+    }
+
+    const email=mode==="email"?value:"";
+    const phone=mode==="phone"?value:"";
+
+    await createNewUser(email,phone,pass);
+
+    popup.classList.add("show");
+    setTimeout(()=>popup.classList.remove("show"),2000);
+
+    setTimeout(()=>{
+      isLogin=true;
+      langSelect.onchange();
+      emailInput.value="";
+      phoneInput.value="";
+      passwordInput.value="";
+      messageBox.style.display="none";
+    },1500);
+  }
+};
+
+// TELEGRAM BUTTON
+telegramFloating.onclick=()=>{
+  customerService.style.display=customerService.style.display==="block"?"none":"block";
+};
+
+customerService.onclick=()=>{
+  window.open("https://t.me/GIWOW552","_blank");
+};
 </script>
+
 </body>
 </html>
