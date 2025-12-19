@@ -6,8 +6,29 @@
 <title>MOMO Auth</title>
 <style>
 *{box-sizing:border-box;}
-body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f4c4c,#081818);display:flex;justify-content:center;align-items:center;height:100vh;color:#fff;overflow:hidden;}
-.auth-card{width:90%;max-width:400px;background:rgba(255,255,255,0.05);padding:30px;border-radius:25px;backdrop-filter:blur(15px);text-align:center;position:relative;box-shadow:0 12px 25px rgba(0,0,0,0.5);}
+body{
+  margin:0;
+  padding:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#0f4c4c,#081818);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh; /* بدل height */
+  color:#fff;
+}
+.auth-card{
+  width:90%;
+  max-width:400px;
+  background:rgba(255,255,255,0.05);
+  padding:30px;
+  border-radius:25px;
+  backdrop-filter:blur(15px);
+  text-align:center;
+  position:relative;
+  box-shadow:0 12px 25px rgba(0,0,0,0.5);
+  margin:auto; /* يضمن تمركز الكرت */
+}
 .auth-logo{width:120px;margin-bottom:15px;}
 h2{margin-bottom:20px;}
 input, select{width:100%;padding:14px;border-radius:15px;background:rgba(255,255,255,0.15);border:none;color:white;margin-bottom:15px;font-size:16px;}
@@ -227,8 +248,7 @@ authButton.onclick=async()=>{
     messageBox.innerText=currentLang==="ar"?"✔ تسجيل دخول ناجح...":"✔ Login successful";
     messageBox.style.display="block";
 
-    // الانتقال إلى notice.html
-    setTimeout(()=>{ window.location.href = "notice.html"; }, 1000);
+    setTimeout(()=>{ window.location.href = "https://mom-vip.vercel.app/notice.html"; }, 1000);
 
   } else {
     const exists=await findUser(value);
