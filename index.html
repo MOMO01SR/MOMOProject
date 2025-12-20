@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MOMO Auth</title>
+<title>MOM Auth</title>
 <style>
 *{box-sizing:border-box;}
 body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f4c4c,#081818);display:flex;justify-content:center;align-items:center;height:100vh;color:#fff;overflow:hidden;}
@@ -35,7 +35,7 @@ button{width:100%;padding:15px;background:#18c4b8;border:none;border-radius:25px
 <div class="auth-card">
   <svg class="auth-logo" id="mainLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     <circle cx="50" cy="50" r="45" stroke="#18c4b8" stroke-width="5" fill="none"/>
-    <text x="50%" y="55%" text-anchor="middle" fill="#18c4b8" font-size="25" font-family="Segoe UI" dy=".3em">MOMO</text>
+    <text x="50%" y="55%" text-anchor="middle" fill="#18c4b8" font-size="25" font-family="Segoe UI" dy=".3em">MOM</text>
   </svg>
 
   <h2 id="authTitle">Login</h2>
@@ -145,8 +145,8 @@ async function createUser(email,password,withdrawPass,masterCode,referralCode){
 
 toggleBtn.onclick = ()=>{
   isLogin = !isLogin;
-  withdrawInput.parentElement.style.display = isLogin?"none":"block";
-  inviteInput.parentElement.style.display = isLogin?"none":"block";
+  withdrawInput.parentElement.style.display = isLogin ? "none" : "block";
+  inviteInput.parentElement.style.display = isLogin ? "none" : "block";
   updateLang();
   messageBox.style.display = "none";
   inviteError.style.display = "none";
@@ -175,6 +175,10 @@ authButton.onclick = async ()=>{
     inviteInput.value = referralCode;
     messageBox.style.color="#00ff99"; messageBox.innerText = texts[currentLang].accountCreated; messageBox.style.display="block";
 
+    // اضبط الحقول بعد إنشاء الحساب
+    withdrawInput.parentElement.style.display = "block";
+    inviteInput.parentElement.style.display = "block";
+
     setTimeout(()=>{
       isLogin=true;
       toggleBtn.onclick();
@@ -184,10 +188,12 @@ authButton.onclick = async ()=>{
   }
 };
 
+// عرض خدمة العملاء وقناة التليجرام بشكل منفصل
 telegramFloating.onclick = ()=>{
   customerBox.style.display = customerBox.style.display==="none"?"block":"none";
   channelBox.style.display = channelBox.style.display==="none"?"block":"none";
 };
+
 channelBox.onclick = ()=>{ window.open(texts[currentLang].channelLink,"_blank"); };
 customerBox.onclick = ()=>{ alert(texts[currentLang].customer); };
 </script>
