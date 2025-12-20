@@ -34,6 +34,9 @@ animation:fadeInUp 0.6s ease forwards;animation-delay:1.5s;}
 .notice-buttons .reject:hover {background:#e0e0e0;}
 .notice-buttons .accept:hover {background:#12b0a0;}
 
+/* Delete account button */
+#deleteAccountBtn {margin-top:20px;background:#ff4444;color:#fff;width:100%;padding:12px;border:none;border-radius:15px;font-weight:bold;cursor:pointer;}
+
 /* Telegram floating button */
 #telegramFloating{
   position:fixed;bottom:20px;right:20px;width:70px;height:70px;border-radius:50%;
@@ -52,7 +55,7 @@ animation:fadeInUp 0.6s ease forwards;animation-delay:1.5s;}
   cursor:pointer;display:none;box-shadow:0 5px 15px rgba(0,0,0,0.3);z-index:1000;
 }
 
-/* Language floating button (same as index.html) */
+/* Language floating button */
 #langSelect{
   position:fixed;top:20px;left:20px;width:100px;height:30px;
   background:#18c4b8;color:#003;border:none;border-radius:15px;
@@ -63,7 +66,6 @@ animation:fadeInUp 0.6s ease forwards;animation-delay:1.5s;}
 </head>
 <body>
 
-<!-- Language selector same as index.html -->
 <select id="langSelect">
   <option value="ar">عربي ▼</option>
   <option value="en">English ▼</option>
@@ -76,21 +78,21 @@ animation:fadeInUp 0.6s ease forwards;animation-delay:1.5s;}
   <p id="noticeText2">1- الوصول إلى المنصة مسؤوليتكم؛ نحن لا نتحمل أي مسؤولية.</p>
   <p id="noticeText3">2- المنصة عبارة عن ترتيب لتقاسم الأموال بين المستخدمين الذين يخسرون في النهاية.</p>
   <p id="noticeText4">3- الأشخاص الذين يأتون في البداية يفوزون بضربة حظ بينكم وبين المستقبل.</p>
-  <p id="noticeText5">4- تم إنشاء المنصة في 11/12/2025.</p>
+  <p id="noticeText5">4- تم إنشاء المنصة في 21/11/2025.</p>
   <p id="noticeText6">5- أموالكم مسؤوليتكم. إنها ضربة حظ، وستتلقون مكافأة أسبوعية من فريقكم.</p>
 
   <div class="notice-buttons">
     <button class="reject" onclick="rejectNotice()" id="rejectBtn">رفض الشروط</button>
     <button class="accept" onclick="acceptNotice()" id="acceptBtn">أوافق على الشروط</button>
   </div>
+
+  <button id="deleteAccountBtn">حذف / تعطيل الحساب</button>
 </div>
 
-<!-- Telegram floating button -->
 <div id="telegramFloating">
   <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
 </div>
 
-<!-- Customer Service button -->
 <div id="customerService" onclick="openTelegram()">خدمة العملاء</div>
 
 <script>
@@ -106,12 +108,12 @@ const rejectBtn = document.getElementById("rejectBtn");
 const acceptBtn = document.getElementById("acceptBtn");
 const telegramFloating = document.getElementById("telegramFloating");
 const customerService = document.getElementById("customerService");
+const deleteAccountBtn = document.getElementById("deleteAccountBtn");
 
 function setLanguage(lang){
-  localStorage.setItem("userLang", lang); // حفظ اللغة
+  localStorage.setItem("userLang", lang);
   if(lang === "ar"){
-    document.documentElement.lang = "ar";
-    document.body.dir = "rtl";
+    document.documentElement.lang = "ar"; document.body.dir = "rtl";
     noticeTitle.innerText = "مرحبًا بالجميع!";
     noticeText1.innerText = "قبل أن نبدأ، تم تصميم هذه المنصة لمساعدتكم على تطوير أنفسكم وكسب المال. هناك تحذيرات قبل أن نبدأ. إذا وافقتم على هذه الشروط، فسنستمر معًا.";
     noticeText2.innerText = "1- الوصول إلى المنصة مسؤوليتكم؛ نحن لا نتحمل أي مسؤولية.";
@@ -122,9 +124,9 @@ function setLanguage(lang){
     rejectBtn.innerText = "رفض الشروط";
     acceptBtn.innerText = "أوافق على الشروط";
     customerService.innerText = "خدمة العملاء";
+    deleteAccountBtn.innerText = "حذف / تعطيل الحساب";
   } else {
-    document.documentElement.lang = "en";
-    document.body.dir = "ltr";
+    document.documentElement.lang = "en"; document.body.dir = "ltr";
     noticeTitle.innerText = "Welcome Everyone!";
     noticeText1.innerText = "Before we start, this platform is designed to help you improve yourself and earn money. There are warnings before we begin. If you agree to these terms, we will continue together.";
     noticeText2.innerText = "1- Access to the platform is your responsibility; we assume no liability.";
@@ -135,22 +137,19 @@ function setLanguage(lang){
     rejectBtn.innerText = "Reject Terms";
     acceptBtn.innerText = "I Agree";
     customerService.innerText = "Customer Service";
+    deleteAccountBtn.innerText = "Delete/Disable Account";
   }
 }
 
-// تحميل اللغة المختارة مسبقًا أو الافتراضية
 window.onload = () => {
   const savedLang = localStorage.getItem("userLang") || "en";
   langSelect.value = savedLang;
   setLanguage(savedLang);
-
   const ps = document.querySelectorAll('.notice-card p, .notice-card h2');
   ps.forEach((el,i)=>{ el.style.animationDelay = `${0.1 + i*0.2}s`; });
 };
 
-langSelect.onchange = () => {
-  setLanguage(langSelect.value);
-};
+langSelect.onchange = () => { setLanguage(langSelect.value); };
 
 function rejectNotice(){
   alert(langSelect.value==="ar"?"تم رفض الشروط. سيتم إعادة توجيهك.":"Terms rejected. Redirecting.");
@@ -160,15 +159,25 @@ function rejectNotice(){
 function acceptNotice(){
   alert(langSelect.value==="ar"?"شكرًا لموافقتك. جاري الانتقال للصفحة التالية...":"Thank you for agreeing. Redirecting...");
   setTimeout(()=>{ window.location.href = "home.html"; },1500);
-};
+}
 
+// Telegram & Customer Service
 telegramFloating.onclick = () => {
   customerService.style.display = customerService.style.display === "block" ? "none" : "block";
 };
+function openTelegram(){ window.open("https://t.me/GIWOW552", "_blank"); }
 
-function openTelegram(){
-  window.open("https://t.me/GIWOW552", "_blank");
-}
+// Delete/Disable account (admin only)
+deleteAccountBtn.onclick = () => {
+  const loggedUser = JSON.parse(localStorage.getItem("loggedUser")||"{}");
+  if(!loggedUser.email){ alert(langSelect.value==="ar"?"لا يوجد حساب لحذفه":"No account to delete"); return; }
+  const confirmDelete = confirm(langSelect.value==="ar"?"هل أنت متأكد أنك تريد حذف وتعطيل الحساب؟ هذا الإجراء لا يمكن التراجع عنه!":"Are you sure you want to delete/disable the account? This action cannot be undone!");
+  if(confirmDelete){
+    localStorage.removeItem("loggedUser");
+    alert(langSelect.value==="ar"?"تم حذف الحساب بنجاح.":"Account deleted successfully.");
+    window.location.href = "index.html";
+  }
+};
 </script>
 </body>
 </html>
