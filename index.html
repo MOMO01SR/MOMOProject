@@ -72,6 +72,7 @@ button{width:100%;padding:15px;background:#18c4b8;border:none;border-radius:25px
 <div class="channelBox" id="channelBox">Telegram Channel</div>
 
 <script type="module">
+// الكود الأصلي للواجهة كما كان
 const MASTER_CODE = "14952710";
 let isLogin = true;
 let currentLang = "en";
@@ -119,30 +120,6 @@ updateLang();
 togglePass.onclick = ()=>{ passwordInput.type = passwordInput.type==="password"?"text":"password"; };
 toggleWithdraw.onclick = ()=>{ withdrawInput.type = withdrawInput.type==="password"?"text":"password"; };
 
-async function fetchUsers(){
-  const res = await fetch('/api/users');
-  return await res.json();
-}
-async function saveUsers(users){
-  await fetch('/api/users',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(users)
-  });
-}
-
-async function findUser(email){
-  const users = await fetchUsers();
-  return users.find(u=>u.email===email) || null;
-}
-
-async function createUser(email,password,withdrawPass,masterCode,referralCode){
-  const users = await fetchUsers();
-  const id = Date.now();
-  users.push({id,email,password,withdrawPass,masterCode,inviteCode:referralCode,balance:0});
-  await saveUsers(users);
-}
-
 toggleBtn.onclick = ()=>{
   isLogin = !isLogin;
   withdrawInput.parentElement.style.display = isLogin ? "none" : "block";
@@ -153,49 +130,22 @@ toggleBtn.onclick = ()=>{
 };
 
 authButton.onclick = async ()=>{
+  // مجرد محاكاة تسجيل/دخول
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
-  const withdrawPass = withdrawInput.value.trim();
-  const code = inviteInput.value.trim();
-
-  if(!email || (!isLogin && (password.length<6 || withdrawPass.length<4))){ alert(texts[currentLang].fill); return; }
-
-  if(isLogin){
-    const user = await findUser(email);
-    if(!user){ messageBox.style.color="#ff4444"; messageBox.innerText = texts[currentLang].accountNotFound; messageBox.style.display="block"; return; }
-    if(user.password!==password){ messageBox.style.color="#ff4444"; messageBox.innerText = texts[currentLang].wrongPassword; messageBox.style.display="block"; return; }
-    localStorage.setItem("loggedUser",JSON.stringify(user));
-    setTimeout(()=>{ window.location.href="notice.html"; },500);
-  } else {
-    if(code!==MASTER_CODE){ inviteError.style.display="block"; return; }
-    const exists = await findUser(email);
-    if(exists){ messageBox.style.color="#ff4444"; messageBox.innerText = texts[currentLang].accountExists; messageBox.style.display="block"; return; }
-    const referralCode = Math.random().toString(36).substring(2,10);
-    await createUser(email,password,withdrawPass,code,referralCode);
-    inviteInput.value = referralCode;
-    messageBox.style.color="#00ff99"; messageBox.innerText = texts[currentLang].accountCreated; messageBox.style.display="block";
-
-    // اضبط الحقول بعد إنشاء الحساب
-    withdrawInput.parentElement.style.display = "block";
-    inviteInput.parentElement.style.display = "block";
-
-    setTimeout(()=>{
-      isLogin=true;
-      toggleBtn.onclick();
-      emailInput.value = email;
-      passwordInput.value = password;
-    },1000);
-  }
+  if(!email||!password){ alert(texts[currentLang].fill); return; }
+  localStorage.setItem("loggedUser",JSON.stringify({email,password}));
+  window.location.href="notice.html";
 };
 
-// عرض خدمة العملاء وقناة التليجرام بشكل منفصل
+// عرض خدمة العملاء وقناة التليجرام
 telegramFloating.onclick = ()=>{
   customerBox.style.display = customerBox.style.display==="none"?"block":"none";
   channelBox.style.display = channelBox.style.display==="none"?"block":"none";
 };
-
 channelBox.onclick = ()=>{ window.open(texts[currentLang].channelLink,"_blank"); };
 customerBox.onclick = ()=>{ alert(texts[currentLang].customer); };
 </script>
+
 </body>
-</html>
+  </html>
